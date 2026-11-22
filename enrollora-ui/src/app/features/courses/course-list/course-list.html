@@ -1,43 +1,41 @@
 
-<div class="courses-page">
+<div class="course-page">
 
   <div class="page-header">
     <div>
-      <h1>Course Management</h1>
-      <p>Manage courses, fees, capacity and availability.</p>
+      <h2>Course Management</h2>
+      <p>Manage courses offered by your institution.</p>
     </div>
 
-    <button class="add-btn" (click)="showForm = !showForm">
-      {{ showForm ? 'Close Form' : '+ Add Course' }}
+    <button type="button" class="btn-add" (click)="openAddForm()">
+      + Add Course
     </button>
   </div>
 
-  <!-- Summary Cards -->
-  <div class="summary-cards">
-    <div class="summary-card">
-      <h3>Total Courses</h3>
-      <p>{{ totalRecords() }}</p>
+  @if (successMessage()) {
+    <div class="success-message">
+      {{ successMessage() }}
     </div>
+  }
 
-    <div class="summary-card">
-      <h3>Current Page</h3>
-      <p>{{ currentPage() }}</p>
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
     </div>
+  }
 
-    <div class="summary-card">
-      <h3>Total Pages</h3>
-      <p>{{ totalPages() }}</p>
-    </div>
-  </div>
-
-  <!-- Add Course Form -->
-  @if (showForm) {
+  @if (showAddForm()) {
     <div class="form-card">
-      <h2>Add New Course</h2>
+
+      <div class="form-header">
+        <h3>Add New Course</h3>
+        <button type="button" class="close-btn" (click)="closeAddForm()">✕</button>
+      </div>
 
       <form (ngSubmit)="addCourse()">
 
         <div class="form-grid">
+
           <div class="form-group">
             <label>Course Name</label>
             <input
@@ -55,7 +53,7 @@
               type="text"
               name="duration"
               [(ngModel)]="newCourse.duration"
-              placeholder="Example: 6 Months"
+              placeholder="Example: 4 Years"
               required
             />
           </div>
@@ -72,7 +70,7 @@
           </div>
 
           <div class="form-group">
-            <label>Capacity</label>
+            <label>Student Capacity</label>
             <input
               type="number"
               name="capacity"
@@ -81,118 +79,128 @@
               required
             />
           </div>
+
         </div>
 
         <div class="form-group checkbox-group">
           <input
             type="checkbox"
-            id="isActive"
             name="isActive"
             [(ngModel)]="newCourse.isActive"
           />
-          <label for="isActive">Active Course</label>
+          <label>Active Course</label>
         </div>
 
-        <button type="submit" class="save-btn" [disabled]="isSubmitting()">
-          {{ isSubmitting() ? 'Saving...' : 'Save Course' }}
-        </button>
+        @if (addError()) {
+          <div class="error-message">
+            {{ addError() }}
+          </div>
+        }
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="cancel-btn"
+            (click)="closeAddForm()">
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="save-btn"
+            [disabled]="isSaving()">
+            {{ isSaving() ? 'Saving...' : 'Save Course' }}
+          </button>
+
+        </div>
 
       </form>
     </div>
   }
 
-  <!-- Messages -->
-  @if (successMessage()) {
-    <div class="success-message">{{ successMessage() }}</div>
-  }
+  <div class="course-card">
 
-  @if (errorMessage()) {
-    <div class="error-message">{{ errorMessage() }}</div>
-  }
-
-  <!-- Loading -->
-  @if (isLoading()) {
-    <div class="loading">Loading courses...</div>
-  }
-
-  @else {
-    <!-- Courses Table -->
-    <div class="table-card">
-      <div class="table-heading">
-        <h2>All Courses</h2>
-        <span>{{ totalRecords() }} courses found</span>
+    <div class="table-header">
+      <div>
+        <h3>All Courses</h3>
+        <p>Total Courses: {{ totalRecords() }}</p>
       </div>
+    </div>
 
-      @if (courses().length > 0) {
-        <div class="table-responsive">
-          <table>
-            <thead>
+    @if (isLoading()) {
+      <div class="loading-message">
+        Loading courses...
+      </div>
+    } @else if (courses().length === 0) {
+      <div class="empty-message">
+        No courses found. Click Add Course to create your first course.
+      </div>
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Course Name</th>
+              <th>Duration</th>
+              <th>Fees</th>
+              <th>Capacity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (course of courses(); track course.courseId; let i = $index) {
               <tr>
-                <th>Course ID</th>
-                <th>Course Name</th>
-                <th>Duration</th>
-                <th>Fees</th>
-                <th>Capacity</th>
-                <th>Enrolled</th>
-                <th>Available Seats</th>
-                <th>Status</th>
+                <td>{{ (pageNumber() - 1) * pageSize() + i + 1 }}</td>
+                <td>{{ course.courseName }}</td>
+                <td>{{ course.duration }}</td>
+                <td>{{ course.fees | currency:'INR':'symbol':'1.0-2' }}</td>
+                <td>{{ course.capacity }}</td>
+                <td>
+                  <span
+                    [class.active-status]="course.isActive"
+                    [class.inactive-status]="!course.isActive">
+                    {{ course.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
               </tr>
-            </thead>
+            }
+          </tbody>
+        </table>
 
-            <tbody>
-              @for (course of courses(); track course.courseId) {
-                <tr>
-                  <td>{{ course.courseId }}</td>
-                  <td class="course-name">{{ course.courseName }}</td>
-                  <td>{{ course.duration }}</td>
-                  <td>{{ course.fees | number:'1.0-2' }}</td>
-                  <td>{{ course.capacity }}</td>
-                  <td>{{ course.enrolledCount }}</td>
-                  <td>{{ course.availableSeats }}</td>
-                  <td>
-                    <span
-                      class="status"
-                      [class.active]="course.isActive"
-                      [class.inactive]="!course.isActive"
-                    >
-                      {{ course.isActive ? 'Active' : 'Inactive' }}
-                    </span>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
+      </div>
+    }
 
-      @else {
-        <div class="empty-state">
-          <h3>No Courses Found</h3>
-          <p>There are no courses available yet.</p>
-        </div>
-      }
+    <div class="pagination">
 
-      <!-- Pagination -->
-      <div class="pagination">
+      <span>
+        Showing {{ courses().length }} of {{ totalRecords() }} courses
+      </span>
+
+      <div class="pagination-controls">
+
         <button
+          type="button"
           (click)="previousPage()"
-          [disabled]="currentPage() <= 1"
-        >
+          [disabled]="pageNumber() <= 1 || isLoading()">
           Previous
         </button>
 
-        <span>
-          Page {{ currentPage() }} of {{ totalPages() }}
-        </span>
+        <span>Page {{ pageNumber() }} of {{ totalPages() }}</span>
 
         <button
+          type="button"
           (click)="nextPage()"
-          [disabled]="currentPage() >= totalPages()"
-        >
+          [disabled]="pageNumber() >= totalPages() || isLoading()">
           Next
         </button>
+
       </div>
     </div>
-  }
 
+  </div>
 </div>

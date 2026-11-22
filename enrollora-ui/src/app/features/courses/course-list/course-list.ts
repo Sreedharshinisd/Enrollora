@@ -69,11 +69,13 @@ export class CourseListComponent implements OnInit {
   }
 
   openAddForm(): void {
-    this.newCourse = this.getEmptyCourse();
-    this.addError.set('');
-    this.successMessage.set('');
-    this.showAddForm.set(true);
-  }
+  console.log('Add Course button clicked');
+
+  this.newCourse = this.getEmptyCourse();
+  this.addError.set('');
+  this.successMessage.set('');
+  this.showAddForm.set(true);
+}
 
   closeAddForm(): void {
     this.showAddForm.set(false);

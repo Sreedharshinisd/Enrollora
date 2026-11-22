@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+
+import { Component, inject, OnInit, ChangeDetectorRef, signal, computed } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { StudentService } from '../student.service';
 import { StudentResponse, StudentFilter, UpdateStudentRequest } from '../student.models';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -17,7 +17,9 @@ export class StudentList implements OnInit {
   private studentService = inject(StudentService);
   private cdr = inject(ChangeDetectorRef);
 
-  students: StudentResponse[] = [];
+  // Student list using Angular Signals
+  students = signal<StudentResponse[]>([]);
+  studentCount = computed(() => this.students().length);
 
   isLoading = false;
   errorMessage = '';
@@ -49,9 +51,13 @@ export class StudentList implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.studentService.getStudents(this.pageNumber, this.pageSize, this.filters).subscribe({
+    this.studentService.getStudents(
+      this.pageNumber,
+      this.pageSize,
+      this.filters
+    ).subscribe({
       next: (response) => {
-        this.students = response.items;
+        this.students.set(response.items);
         this.totalRecords = response.totalRecords;
         this.totalPages = response.totalPages;
         this.pageNumber = response.pageNumber;
@@ -168,14 +174,18 @@ export class StudentList implements OnInit {
 
   studentForm = new FormGroup({
     name: new FormControl('', Validators.required),
-
     email: new FormControl('', [Validators.required, Validators.email]),
-
     department: new FormControl('', Validators.required),
-
-    age: new FormControl(18, [Validators.required, Validators.min(17), Validators.max(60)]),
-
-    cgpa: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(10)]),
+    age: new FormControl(18, [
+      Validators.required,
+      Validators.min(17),
+      Validators.max(60),
+    ]),
+    cgpa: new FormControl(0, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(10),
+    ]),
   });
 
   editStudent(id: number): void {
@@ -201,6 +211,7 @@ export class StudentList implements OnInit {
   closeEditModal(): void {
     this.isEditModalOpen = false;
     this.editingStudentId = null;
+
     this.studentForm.reset({
       name: '',
       email: '',
@@ -225,10 +236,12 @@ export class StudentList implements OnInit {
       cgpa: formValue.cgpa!,
     };
 
-    this.studentService.updateStudent(this.editingStudentId, studentData).subscribe({
+    this.studentService.updateStudent(
+      this.editingStudentId,
+      studentData
+    ).subscribe({
       next: (updatedStudent) => {
         console.log('Student updated:', updatedStudent);
-
         this.closeEditModal();
         this.loadStudents();
       },

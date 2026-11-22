@@ -19,14 +19,7 @@
   margin-bottom: 28px;
 }
 
-.eyebrow {
-  color: #7862d8;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-}
-
-.page-header h1 {
+.page-header h2 {
   font-size: 30px;
   margin: 8px 0;
 }
@@ -47,43 +40,132 @@
   font-weight: 600;
 }
 
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  margin-bottom: 26px;
+.btn-add:hover,
+.save-btn:hover {
+  background: #5940bd;
 }
 
-.summary-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+/* Messages */
+
+.success-message,
+.error-message {
+  padding: 13px 16px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+}
+
+.success-message {
+  background: #e9f7ef;
+  color: #25965b;
+}
+
+.error-message {
+  background: #ffe8e8;
+  color: #cf4949;
+}
+
+/* Add Course Form */
+
+.form-card {
   background: white;
-  padding: 22px;
-  border-radius: 13px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 14px;
   box-shadow: 0 3px 15px #25243a0b;
 }
 
-.summary-card span {
-  color: #85859a;
-  font-size: 13px;
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
 }
 
-.summary-card h2 {
-  margin: 7px 0 0;
-  font-size: 25px;
+.form-header h3 {
+  margin: 0;
 }
 
-.summary-icon {
-  font-size: 27px;
+.close-btn {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-.purple { border-left: 4px solid #8065e8; }
-.orange { border-left: 4px solid #f2a64a; }
-.blue { border-left: 4px solid #4d9ce8; }
-.green { border-left: 4px solid #42b883; }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
 
-.table-card {
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input:not([type="checkbox"]) {
+  padding: 12px;
+  border: 1px solid #dedbea;
+  border-radius: 7px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #7055d9;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.save-btn {
+  background: #7055d9;
+  color: white;
+}
+
+.cancel-btn {
+  background: #eeeef5;
+  color: #25243a;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Course Table */
+
+.course-card {
   background: white;
   padding: 24px;
   border-radius: 14px;
@@ -94,150 +176,62 @@
   margin-bottom: 22px;
 }
 
-.table-header h2 {
+.table-header h3 {
   margin: 0 0 7px;
 }
 
-.record-count {
-  background: #f0edff;
-  color: #7055d9;
-  padding: 8px 13px;
-  border-radius: 20px;
-  font-size: 13px;
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.course-table {
+table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 750px;
+  min-width: 650px;
 }
 
-.course-table th {
+th {
   text-align: left;
   background: #f8f7fc;
   color: #85859a;
-  font-size: 11px;
+  font-size: 12px;
   padding: 15px;
 }
 
-.course-table td {
+td {
   padding: 17px 15px;
   border-bottom: 1px solid #eeeeF4;
 }
 
-.course-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.course-info small {
-  display: block;
-  color: #9292a4;
-  margin-top: 5px;
-}
-
-.course-avatar {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: #eeeaff;
-  color: #7055d9;
-  font-weight: bold;
-}
-
-.fees {
-  color: #5543b5;
-}
-
-.enrollment-info {
-  min-width: 100px;
-}
-
-.progress-track {
-  height: 6px;
-  background: #eeeef5;
-  border-radius: 10px;
-  margin-top: 8px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #8065e8;
-  border-radius: 10px;
-}
-
-.seats-badge,
-.status-badge {
+.active-status,
+.inactive-status {
   padding: 7px 11px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
 }
 
-.seats-badge {
+.active-status {
   background: #e9f7ef;
   color: #25965b;
 }
 
-.low-seats {
-  background: #fff2dc;
-  color: #d28a20;
-}
-
-.no-seats {
-  background: #ffe8e8;
-  color: #d64c4c;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.status-badge.active {
-  background: #e9f7ef;
-  color: #25965b;
-}
-
-.status-badge.inactive {
+.inactive-status {
   background: #f0f0f3;
   color: #777;
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
-}
+/* Loading and Empty State */
 
-.state-message {
+.loading-message,
+.empty-message {
   text-align: center;
-  padding: 50px 20px;
+  padding: 45px 20px;
   color: #85859a;
 }
 
-.state-message > span {
-  font-size: 35px;
-}
-
-.error-state {
-  color: #cf4949;
-}
-
-.btn-retry,
-.page-btn {
-  padding: 9px 15px;
-  border: 1px solid #dedbea;
-  background: white;
-  border-radius: 7px;
-  cursor: pointer;
-}
+/* Pagination */
 
 .pagination {
   margin-top: 22px;
@@ -245,35 +239,31 @@
   border-top: 1px solid #eeeef4;
 }
 
-.pagination-info,
-.total-info {
+.pagination > span {
   color: #77778c;
   font-size: 13px;
 }
 
-.pagination-actions {
+.pagination-controls {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.current-page {
-  background: #7055d9;
-  color: white;
-  padding: 8px 13px;
+.pagination-controls button {
+  padding: 9px 15px;
+  border: 1px solid #dedbea;
+  background: white;
   border-radius: 7px;
+  cursor: pointer;
 }
 
-button:disabled {
+.pagination-controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-@media (max-width: 900px) {
-  .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+/* Responsive */
 
 @media (max-width: 600px) {
   .course-page {
@@ -285,7 +275,7 @@ button:disabled {
     flex-direction: column;
   }
 
-  .summary-grid {
+  .form-grid {
     grid-template-columns: 1fr;
   }
 
